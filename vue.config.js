@@ -1,3 +1,12 @@
+const webpack = require('webpack')
+
 module.exports = {
-  lintOnSave: false
+  lintOnSave: false,
+  configureWebpack: {
+    plugins: [
+      new webpack.ProvidePlugin({
+        mapboxgl: 'mapbox-gl',
+      }),
+    ],
+  },
 }

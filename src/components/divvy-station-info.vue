@@ -27,7 +27,7 @@
             <mapbox
                 :access-token="accessToken"
                 :map-options="{
-                    style: 'mapbox://styles/mapbox/dark-v9',
+                    style: 'mapbox://styles/mapbox/light-v9',
                     center: coordinates,
                     zoom: zoom
                 }"
@@ -66,7 +66,7 @@ export default {
     methods: {
         mapLoaded(map) {
             this.map = map;
-            this.map.flyTo({
+            this.map.easeTo({
                 center: this.coordinates
             });
         },
@@ -88,7 +88,7 @@ export default {
             const select =
                 "select start_time, from_longitude, from_latitude, to_longitude, to_latitude, to_station_id, to_station_name, from_station_id, from_station_name, trip_duration";
             const where = `where from_station_id="${id}" and trip_duration > 120 and start_time > "2019-10-26T09:24:48.000"`;
-            const orderBy = "order by start_time desc limit 10";
+            const orderBy = "order by start_time desc limit 1";
             const query = encodeURIComponent(`${select} ${where} ${orderBy}`);
             axios.get(`${this.url}?$query=${query}`).then(response => {
                 this.trips = response.data;
@@ -98,8 +98,8 @@ export default {
                     this.trips[0].from_longitude,
                     this.trips[0].from_latitude
                 ];
-                if (this.map.flyTo) {
-                    this.map.flyTo({
+                if (this.map.easeTo) {
+                    this.map.easeTo({
                         center: this.coordinates
                     });
                 }

@@ -1,14 +1,14 @@
 <template>
-  <StationInfo />
+  <StationContainer />
 </template>
 
 <script>
-import StationInfo from "./components/divvy-station-info.vue";
+import StationContainer from "./components/divvy-station-container.vue";
 
 export default {
   name: 'App',
   components: {
-    StationInfo
+    StationContainer
   }
 }
 </script>

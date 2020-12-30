@@ -54,10 +54,11 @@ export default {
             markers_obj: {},
             url: "https://data.cityofchicago.org/api/id/fg6s-gzvg.json",
             accessToken: process.env.VUE_APP_ACCESS_TOKEN,
-            mapStyle: "mapbox://styles/mapbox/dark-v10",
+            mapStyle: "mapbox://styles/mapbox/light-v9",
             coordinates: [-87.6071, 41.822985],
             zoom: 12,
-            map: {}
+            map: {},
+            marker: undefined
         };
     },
     mounted() {
@@ -69,6 +70,16 @@ export default {
             this.map.easeTo({
                 center: this.coordinates
             });
+            this.marker = new mapboxgl.Marker()
+                .setLngLat([-87.6071, 41.822985])
+                .addTo(this.map);
+            if (this.trips) {
+                this.trips.map(trip => {
+                    new mapboxgl.Marker()
+                        .setLngLat([trip.to_longitude, trip.to_latitude])
+                        .addTo(this.map);
+                });
+            }
         },
         fetchNumberOfTrip(id) {
             const query = encodeURIComponent(
@@ -88,7 +99,7 @@ export default {
             const select =
                 "select start_time, from_longitude, from_latitude, to_longitude, to_latitude, to_station_id, to_station_name, from_station_id, from_station_name, trip_duration";
             const where = `where from_station_id="${id}" and trip_duration > 120 and start_time > "2019-10-26T09:24:48.000"`;
-            const orderBy = "order by start_time desc limit 1";
+            const orderBy = "order by start_time desc limit 5";
             const query = encodeURIComponent(`${select} ${where} ${orderBy}`);
             axios.get(`${this.url}?$query=${query}`).then(response => {
                 this.trips = response.data;
@@ -102,6 +113,12 @@ export default {
                     this.map.easeTo({
                         center: this.coordinates
                     });
+                }
+                if (this.marker) {
+                    this.marker.remove();
+                    this.marker = new mapboxgl.Marker()
+                        .setLngLat(this.coordinates)
+                        .addTo(this.map);
                 }
                 this.trips.map(m => {
                     if (this.markers_obj[m["to_station_id"]]) {

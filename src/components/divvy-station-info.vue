@@ -27,10 +27,11 @@
             <mapbox
                 :access-token="accessToken"
                 :map-options="{
-          style: 'mapbox://styles/mapbox/light-v9',
-          center: coordinates,
-          zoom: zoom
-        }"
+                    style: 'mapbox://styles/mapbox/dark-v9',
+                    center: coordinates,
+                    zoom: zoom
+                }"
+                @map-load="mapLoaded"
             />
         </div>
     </div>
@@ -53,19 +54,22 @@ export default {
             markers_obj: {},
             url: "https://data.cityofchicago.org/api/id/fg6s-gzvg.json",
             accessToken: process.env.VUE_APP_ACCESS_TOKEN,
-            mapStyle: "mapbox://styles/mapbox/light-v10",
-            coordinates: [-111.549668, 39.014],
-            zoom: 12
+            mapStyle: "mapbox://styles/mapbox/dark-v10",
+            coordinates: [-87.6071, 41.822985],
+            zoom: 12,
+            map: {}
         };
     },
     mounted() {
         this.fetchStationData(265);
     },
-    created() {
-        // We need to set mapbox-gl library here in order to use it in template
-        this.mapbox = Mapbox;
-    },
     methods: {
+        mapLoaded(map) {
+            this.map = map;
+            this.map.flyTo({
+                center: this.coordinates
+            });
+        },
         fetchNumberOfTrip(id) {
             const query = encodeURIComponent(
                 `select count(start_time) where from_station_id="${id}" and trip_duration > 120`
@@ -82,14 +86,23 @@ export default {
             this.fetchNumberOfTrip(id);
 
             const select =
-                "select start_time, to_longitude, to_latitude, to_station_id, to_station_name, from_station_id, from_station_name, trip_duration";
+                "select start_time, from_longitude, from_latitude, to_longitude, to_latitude, to_station_id, to_station_name, from_station_id, from_station_name, trip_duration";
             const where = `where from_station_id="${id}" and trip_duration > 120 and start_time > "2019-10-26T09:24:48.000"`;
-            const orderBy = "order by start_time desc";
+            const orderBy = "order by start_time desc limit 10";
             const query = encodeURIComponent(`${select} ${where} ${orderBy}`);
             axios.get(`${this.url}?$query=${query}`).then(response => {
                 this.trips = response.data;
                 this.station = this.trips[0].from_station_name;
                 this.markers_obj = {};
+                this.coordinates = [
+                    this.trips[0].from_longitude,
+                    this.trips[0].from_latitude
+                ];
+                if (this.map.flyTo) {
+                    this.map.flyTo({
+                        center: this.coordinates
+                    });
+                }
                 this.trips.map(m => {
                     if (this.markers_obj[m["to_station_id"]]) {
                         this.markers_obj[m["to_station_id"]].count++;

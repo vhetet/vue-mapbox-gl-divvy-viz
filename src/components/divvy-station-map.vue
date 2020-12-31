@@ -37,21 +37,36 @@ export default {
     methods: {
         mapLoaded(map) {
             this.map = map;
+            this.coordinates = [this.trips[0].fromLong, this.trips[0].fromLat];
             this.map.easeTo({
                 center: this.coordinates
             });
-            this.departureMarker = new mapboxgl.Marker()
-                .setLngLat([-87.6071, 41.822985])
-                .addTo(this.map);
+            this.addDestinationMarkers();
+            this.addDepartureMarker();
+        },
+        addDestinationMarkers() {
             if (this.trips) {
+                this.destinationMarkers.map(marker => {
+                    marker.remove();
+                });
                 this.trips.map(trip => {
-                    this.destinationMarkers.push(
-                        new mapboxgl.Marker({ color: "red" })
-                            .setLngLat([trip.long, trip.lat])
-                            .addTo(this.map)
-                    );
+                    if ([trip.long, trip.lat] !== this.coordinates) {
+                        this.destinationMarkers.push(
+                            new mapboxgl.Marker({ color: "red" })
+                                .setLngLat([trip.long, trip.lat])
+                                .addTo(this.map)
+                        );
+                    }
                 });
             }
+        },
+        addDepartureMarker() {
+            if (this.departureMarker) {
+                this.departureMarker.remove();
+            }
+            this.departureMarker = new mapboxgl.Marker()
+                .setLngLat(this.coordinates)
+                .addTo(this.map);
         }
     },
     watch: {
@@ -66,24 +81,8 @@ export default {
                         center: this.coordinates
                     });
                 }
-                if (this.departureMarker) {
-                    this.departureMarker.remove();
-                    this.departureMarker = new mapboxgl.Marker()
-                        .setLngLat(this.coordinates)
-                        .addTo(this.map);
-                }
-                this.destinationMarkers.map(marker => {
-                    marker.remove();
-                });
-                this.trips.map(trip => {
-                    if ([trip.long, trip.lat] !== this.coordinates) {
-                        this.destinationMarkers.push(
-                            new mapboxgl.Marker({ color: "red" })
-                                .setLngLat([trip.long, trip.lat])
-                                .addTo(this.map)
-                        );
-                    }
-                });
+                this.addDestinationMarkers();
+                this.addDepartureMarker();
             }
         }
     }

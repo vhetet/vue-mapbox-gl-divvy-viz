@@ -1,28 +1,6 @@
 <template>
     <div class="container">
-        <div class="station-info">
-            <h3>{{ station }}</h3>
-            <p>number of trips: {{ trips_number }}</p>
-            <h4>Top destination</h4>
-            <div class="top-destination">
-                <p class="header">
-                    <span class="trip-number">Number of trip</span>
-                    <span class="trip-destination">Name of destination</span>
-                </p>
-                <p
-                    v-for="(trip, i) in Object.values(markers_obj).sort((a, b) =>
-            a.count < b.count ? 1 : -1
-          )"
-                    v-bind:key="i"
-                >
-                    <span class="trip-number">{{ trip.count }}</span>
-                    <span
-                        class="trip-destination link"
-                        @click="fetchStationData(trip.station_id)"
-                    >{{ trip.station_name }}</span>
-                </p>
-            </div>
-        </div>
+        <StationInfo :destinationList="markers_obj" :trips_number="trips_number" :station="station" />
         <div id="map-container">
             <mapbox
                 :access-token="accessToken"
@@ -40,11 +18,13 @@
 <script>
 import axios from "axios";
 import Mapbox from "mapbox-gl-vue";
+import StationInfo from "./divvy-station-info.vue"
 
 export default {
     name: "station-info",
     components: {
-        Mapbox
+        Mapbox,
+        StationInfo
     },
     data() {
         return {

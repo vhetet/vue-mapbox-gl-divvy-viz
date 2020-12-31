@@ -33,7 +33,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 * update station info to be scrollable if height is higher than the viewport
 * update design to handle phone portait differently (vertical?)
 * add unit tests
-* finish code refactoring (move map to it's own component)
 * add move info
 * update marker
 * add a popup on markers to see the info? Or highlight the info on the leftt page

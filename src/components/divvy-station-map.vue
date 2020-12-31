@@ -47,7 +47,7 @@ export default {
                 // need to replace that with the marker_obj to avoid generating the same marker twice
                 this.trips.map(trip => {
                     this.destinationMarkers.push(
-                        new mapboxgl.Marker()
+                        new mapboxgl.Marker({ color: 'red'})
                         .setLngLat([trip.to_longitude, trip.to_latitude])
                         .addTo(this.map)
                     )
@@ -78,7 +78,7 @@ export default {
                 })
                 this.trips.map(trip => {
                     this.destinationMarkers.push(
-                        new mapboxgl.Marker()
+                        new mapboxgl.Marker({ color: 'red'})
                         .setLngLat([trip.to_longitude, trip.to_latitude])
                         .addTo(this.map)
                     )

@@ -21,7 +21,7 @@ export default {
         Mapbox
     },
     props: {
-        trips: []
+        trips: undefined
     },
     data() {
         return {

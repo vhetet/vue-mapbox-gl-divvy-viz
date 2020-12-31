@@ -39,7 +39,6 @@ export default {
     },
     methods: {
         changeStation(id) {
-            console.log('click')
             this.$emit('stationChange', id)
         }
     }

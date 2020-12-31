@@ -15,6 +15,7 @@
                 <span class="trip-number">{{ trip.count }}</span>
                 <span
                     class="trip-destination link"
+                    :class="trip.station_name === station ? 'departure' : ''"
                     @click="changeStation(trip.station_id)"
                 >{{ trip.station_name }}</span>
             </p>
@@ -63,6 +64,10 @@ export default {
 
     .trip-destination {
         width: 300px;
+
+        &.departure {
+            font-weight: bold;
+        }
     }
 
     .link {

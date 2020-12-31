@@ -1,15 +1,20 @@
 <template>
     <div class="container">
-        <StationInfo :destinationList="markers_obj" :tripsNumber="tripsNumber" :station="station" @stationChange="fetchStationData" />
-        <StationMap :trips="trips" />
+        <StationInfo
+            :destinationList="destinationList"
+            :tripsNumber="tripsNumber"
+            :station="station"
+            @stationChange="fetchStationData"
+        />
+        <StationMap :trips="destinationList" />
     </div>
 </template>
 
 <script>
 import axios from "axios";
 import Mapbox from "mapbox-gl-vue";
-import StationInfo from "./divvy-station-info.vue"
-import StationMap from "./divvy-station-map.vue"
+import StationInfo from "./divvy-station-info.vue";
+import StationMap from "./divvy-station-map.vue";
 
 export default {
     name: "station-container",
@@ -24,7 +29,8 @@ export default {
             tripsNumber: 0,
             station: undefined,
             markers_obj: {},
-            url: "https://data.cityofchicago.org/api/id/fg6s-gzvg.json"
+            url: "https://data.cityofchicago.org/api/id/fg6s-gzvg.json",
+            destinationList: []
         };
     },
     mounted() {
@@ -49,7 +55,7 @@ export default {
             const select =
                 "select start_time, from_longitude, from_latitude, to_longitude, to_latitude, to_station_id, to_station_name, from_station_id, from_station_name, trip_duration";
             const where = `where from_station_id="${id}" and trip_duration > 120 and start_time > "2019-10-26T09:24:48.000"`;
-            const orderBy = "order by start_time desc limit 5";
+            const orderBy = "order by start_time desc limit 20";
             const query = encodeURIComponent(`${select} ${where} ${orderBy}`);
             axios.get(`${this.url}?$query=${query}`).then(response => {
                 this.trips = response.data;
@@ -64,10 +70,15 @@ export default {
                             station_name: m.to_station_name,
                             station_id: m.to_station_id,
                             long: parseFloat(m.to_longitude),
-                            lat: parseFloat(m.to_latitude)
+                            lat: parseFloat(m.to_latitude),
+                            fromLong: parseFloat(m.from_longitude),
+                            fromLat: parseFloat(m.from_latitude),
                         };
                     }
                 });
+                this.destinationList = Object.values(this.markers_obj).sort((a, b) =>
+                    a.count < b.count ? 1 : -1
+                );
             });
         }
     }

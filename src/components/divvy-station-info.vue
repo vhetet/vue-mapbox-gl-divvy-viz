@@ -9,9 +9,7 @@
                 <span class="trip-destination">Name of destination</span>
             </p>
             <p
-                v-for="(trip, i) in Object.values(destinationList).sort((a, b) =>
-                        a.count < b.count ? 1 : -1
-                    )"
+                v-for="(trip, i) in destinationList"
                 v-bind:key="i"
             >
                 <span class="trip-number">{{ trip.count }}</span>
@@ -30,12 +28,7 @@ export default {
     props: {
         destinationList: {},
         tripsNumber: 0,
-        sation: ''
-    },
-    data() {
-        return {
-            station: undefined
-        };
+        station: ''
     },
     methods: {
         changeStation(id) {

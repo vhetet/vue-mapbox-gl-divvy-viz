@@ -44,23 +44,22 @@ export default {
                 .setLngLat([-87.6071, 41.822985])
                 .addTo(this.map);
             if (this.trips) {
-                // need to replace that with the marker_obj to avoid generating the same marker twice
                 this.trips.map(trip => {
                     this.destinationMarkers.push(
-                        new mapboxgl.Marker({ color: 'red'})
-                        .setLngLat([trip.to_longitude, trip.to_latitude])
-                        .addTo(this.map)
-                    )
+                        new mapboxgl.Marker({ color: "red" })
+                            .setLngLat([trip.long, trip.lat])
+                            .addTo(this.map)
+                    );
                 });
             }
         }
     },
     watch: {
         trips: function(val) {
-            if(this.map) {
+            if (this.map) {
                 this.coordinates = [
-                    this.trips[0].from_longitude,
-                    this.trips[0].from_latitude
+                    this.trips[0].fromLong,
+                    this.trips[0].fromLat
                 ];
                 if (this.map.easeTo) {
                     this.map.easeTo({
@@ -75,13 +74,15 @@ export default {
                 }
                 this.destinationMarkers.map(marker => {
                     marker.remove();
-                })
+                });
                 this.trips.map(trip => {
-                    this.destinationMarkers.push(
-                        new mapboxgl.Marker({ color: 'red'})
-                        .setLngLat([trip.to_longitude, trip.to_latitude])
-                        .addTo(this.map)
-                    )
+                    if ([trip.long, trip.lat] !== this.coordinates) {
+                        this.destinationMarkers.push(
+                            new mapboxgl.Marker({ color: "red" })
+                                .setLngLat([trip.long, trip.lat])
+                                .addTo(this.map)
+                        );
+                    }
                 });
             }
         }

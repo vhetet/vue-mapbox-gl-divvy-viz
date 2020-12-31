@@ -17,7 +17,7 @@
                 <span class="trip-number">{{ trip.count }}</span>
                 <span
                     class="trip-destination link"
-                    @click="fetchStationData(trip.station_id)"
+                    @click="changeStation(trip.station_id)"
                 >{{ trip.station_name }}</span>
             </p>
         </div>
@@ -36,6 +36,12 @@ export default {
         return {
             station: undefined
         };
+    },
+    methods: {
+        changeStation(id) {
+            console.log('click')
+            this.$emit('stationChange', id)
+        }
     }
 };
 </script>

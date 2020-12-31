@@ -1,17 +1,7 @@
 <template>
     <div class="container">
-        <StationInfo :destinationList="markers_obj" :trips_number="trips_number" :station="station" />
-        <div id="map-container">
-            <mapbox
-                :access-token="accessToken"
-                :map-options="{
-                    style: 'mapbox://styles/mapbox/light-v9',
-                    center: coordinates,
-                    zoom: zoom
-                }"
-                @map-load="mapLoaded"
-            />
-        </div>
+        <StationInfo :destinationList="markers_obj" :trips_number="trips_number" :station="station" @stationChange="fetchStationData" />
+        <StationMap :trips="trips" />
     </div>
 </template>
 
@@ -19,48 +9,28 @@
 import axios from "axios";
 import Mapbox from "mapbox-gl-vue";
 import StationInfo from "./divvy-station-info.vue"
+import StationMap from "./divvy-station-map.vue"
 
 export default {
-    name: "station-info",
+    name: "station-container",
     components: {
         Mapbox,
-        StationInfo
+        StationInfo,
+        StationMap
     },
     data() {
         return {
-            trips: undefined,
+            trips: [],
             trips_number: 0,
             station: undefined,
             markers_obj: {},
-            url: "https://data.cityofchicago.org/api/id/fg6s-gzvg.json",
-            accessToken: process.env.VUE_APP_ACCESS_TOKEN,
-            mapStyle: "mapbox://styles/mapbox/light-v9",
-            coordinates: [-87.6071, 41.822985],
-            zoom: 12,
-            map: {},
-            marker: undefined
+            url: "https://data.cityofchicago.org/api/id/fg6s-gzvg.json"
         };
     },
     mounted() {
         this.fetchStationData(265);
     },
     methods: {
-        mapLoaded(map) {
-            this.map = map;
-            this.map.easeTo({
-                center: this.coordinates
-            });
-            this.marker = new mapboxgl.Marker()
-                .setLngLat([-87.6071, 41.822985])
-                .addTo(this.map);
-            if (this.trips) {
-                this.trips.map(trip => {
-                    new mapboxgl.Marker()
-                        .setLngLat([trip.to_longitude, trip.to_latitude])
-                        .addTo(this.map);
-                });
-            }
-        },
         fetchNumberOfTrip(id) {
             const query = encodeURIComponent(
                 `select count(start_time) where from_station_id="${id}" and trip_duration > 120`
@@ -89,17 +59,17 @@ export default {
                     this.trips[0].from_longitude,
                     this.trips[0].from_latitude
                 ];
-                if (this.map.easeTo) {
-                    this.map.easeTo({
-                        center: this.coordinates
-                    });
-                }
-                if (this.marker) {
-                    this.marker.remove();
-                    this.marker = new mapboxgl.Marker()
-                        .setLngLat(this.coordinates)
-                        .addTo(this.map);
-                }
+                // if (this.map.easeTo) {
+                //     this.map.easeTo({
+                //         center: this.coordinates
+                //     });
+                // }
+                // if (this.marker) {
+                //     this.marker.remove();
+                //     this.marker = new mapboxgl.Marker()
+                //         .setLngLat(this.coordinates)
+                //         .addTo(this.map);
+                // }
                 this.trips.map(m => {
                     if (this.markers_obj[m["to_station_id"]]) {
                         this.markers_obj[m["to_station_id"]].count++;
@@ -124,45 +94,5 @@ export default {
 .container {
     display: flex;
     justify-content: space-between;
-
-    .station-info {
-        width: 450px;
-
-        p {
-            display: flex;
-            justify-content: space-between;
-            margin: auto;
-        }
-
-        .header {
-            font-weight: bold;
-        }
-
-        span {
-            padding: 4px 10px;
-        }
-
-        .trip-number {
-            width: 150px;
-        }
-
-        .trip-destination {
-            width: 300px;
-        }
-
-        .link {
-            cursor: pointer;
-        }
-    }
-
-    #map-container {
-        width: 100%;
-        height: 1000px;
-    }
-
-    #map {
-        width: 100%;
-        height: 100%;
-    }
 }
 </style>

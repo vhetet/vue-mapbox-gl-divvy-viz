@@ -1,7 +1,7 @@
 <template>
     <div class="station-info">
         <h3>{{ station }}</h3>
-        <p>number of trips: {{ trips_number }}</p>
+        <p>number of trips: {{ tripsNumber }}</p>
         <h4>Top destination</h4>
         <div class="top-destination">
             <p class="header">
@@ -29,7 +29,7 @@ export default {
     name: "station-info",
     props: {
         destinationList: {},
-        trips_number: 0,
+        tripsNumber: 0,
         sation: ''
     },
     data() {

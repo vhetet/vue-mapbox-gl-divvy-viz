@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <StationInfo :destinationList="markers_obj" :trips_number="trips_number" :station="station" @stationChange="fetchStationData" />
+        <StationInfo :destinationList="markers_obj" :tripsNumber="tripsNumber" :station="station" @stationChange="fetchStationData" />
         <StationMap :trips="trips" />
     </div>
 </template>
@@ -21,7 +21,7 @@ export default {
     data() {
         return {
             trips: [],
-            trips_number: 0,
+            tripsNumber: 0,
             station: undefined,
             markers_obj: {},
             url: "https://data.cityofchicago.org/api/id/fg6s-gzvg.json"
@@ -40,7 +40,7 @@ export default {
                 .get(request)
                 .then(
                     response =>
-                        (this.trips_number = response.data[0].count_start_time)
+                        (this.tripsNumber = response.data[0].count_start_time)
                 );
         },
         fetchStationData(id) {
@@ -55,21 +55,6 @@ export default {
                 this.trips = response.data;
                 this.station = this.trips[0].from_station_name;
                 this.markers_obj = {};
-                this.coordinates = [
-                    this.trips[0].from_longitude,
-                    this.trips[0].from_latitude
-                ];
-                // if (this.map.easeTo) {
-                //     this.map.easeTo({
-                //         center: this.coordinates
-                //     });
-                // }
-                // if (this.marker) {
-                //     this.marker.remove();
-                //     this.marker = new mapboxgl.Marker()
-                //         .setLngLat(this.coordinates)
-                //         .addTo(this.map);
-                // }
                 this.trips.map(m => {
                     if (this.markers_obj[m["to_station_id"]]) {
                         this.markers_obj[m["to_station_id"]].count++;

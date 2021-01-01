@@ -45,4 +45,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 * add a popup on markers to see the info? Or highlight the info on the left page
 * add a button to load new station from the map
 * add mapbox token info to the readme
-
+* deploy it somewhere

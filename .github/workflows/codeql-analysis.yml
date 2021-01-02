@@ -58,8 +58,8 @@ jobs:
     #     npm run i
     #     npm run build
 
-    # - name: Perform CodeQL Analysis
-    #   uses: github/codeql-action/analyze@v1
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
     # - name: SonarCloud Scan
     #   uses: SonarSource/sonarcloud-github-action@v1.4
     #   # with:

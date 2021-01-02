@@ -1,8 +1,8 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import DivvyStationInfo from '@/components/divvy-station-info.vue'
 
 describe('divvy-station-info.vue', () => {
-  const wrapper = mount(DivvyStationInfo)
+  const wrapper = shallowMount(DivvyStationInfo)
 
   it('renders when props are null/empty', () => {
     expect(wrapper.find(".total-trip-number").text()).toContain("number of trips");

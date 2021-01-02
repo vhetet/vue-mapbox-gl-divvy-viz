@@ -1,7 +1,7 @@
 <template>
     <div class="station-info">
         <h3>{{ station }}</h3>
-        <p>number of trips: {{ tripsNumber }}</p>
+        <p class="total-trip-number">number of trips: {{ tripsNumber }}</p>
         <h4>Top destination</h4>
         <div class="top-destination">
             <p class="header">

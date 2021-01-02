@@ -58,17 +58,17 @@ jobs:
     #     npm run i
     #     npm run build
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v1.4
-      # with:
-        # Additional arguments to the sonarcloud scanner
-        # args: # optional
-        # Set the sonar.projectBaseDir analysis property
-        # projectBaseDir: # optional, default is .
-    - name: Run Jest
-      uses: stefanoeb/jest-action@1.0.4
-      # with:
-        # Args to jest
-        # jestArgs: # optional
+    # - name: Perform CodeQL Analysis
+    #   uses: github/codeql-action/analyze@v1
+    # - name: SonarCloud Scan
+    #   uses: SonarSource/sonarcloud-github-action@v1.4
+    #   # with:
+    #     # Additional arguments to the sonarcloud scanner
+    #     # args: # optional
+    #     # Set the sonar.projectBaseDir analysis property
+    #     # projectBaseDir: # optional, default is .
+    # - name: Run Jest
+    #   uses: stefanoeb/jest-action@1.0.4
+    #   # with:
+    #     # Args to jest
+    #     # jestArgs: # optional

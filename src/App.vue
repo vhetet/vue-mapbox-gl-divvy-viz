@@ -19,4 +19,11 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
+.destination {
+    width: 20px;
+    height: 20px;
+    border: solid black 2px;
+    border-radius: 50%;
+}
 </style>

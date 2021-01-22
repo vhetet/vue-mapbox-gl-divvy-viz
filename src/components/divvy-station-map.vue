@@ -51,8 +51,10 @@ export default {
                 });
                 this.trips.map(trip => {
                     if ([trip.long, trip.lat] !== this.coordinates) {
+                        let el = document.createElement("div");
+                        el.className = "destination";
                         this.destinationMarkers.push(
-                            new mapboxgl.Marker({ color: "red" })
+                            new mapboxgl.Marker(el)
                                 .setLngLat([trip.long, trip.lat])
                                 .addTo(this.map)
                         );
